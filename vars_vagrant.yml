@@ -1,0 +1,5 @@
+# Override variables here. Defaulted values displayed as example
+#
+centos_iso_name: CentOS-7-x86_64-Minimal-1611.iso
+#uri_centos_iso: http://chicago.gaminghost.co/7/isos/x86_64/{{ centos_iso_name }}
+#centos_iso_mount_path: /mnt/dvd

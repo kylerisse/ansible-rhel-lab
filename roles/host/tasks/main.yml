@@ -1,20 +1,24 @@
 ---
 
+- name: Disable selinux
+  selinux:
+    state: disabled
+
 - name: Copy sysctl.conf
   copy:
     src: sysctl.conf
     dest: /etc/sysctl.conf
   notify: refresh sysctl
 
-- name: Install Virtualization Host group
+- name: Install libvirt
   yum:
-    name: "@Virtualization Host"
+    name: libvirt
     state: present
   notify: start libvirtd
 
-- name: Install Virtualization Client group
+- name: Install virt-install
   yum:
-    name: "@Virtualization Client"
+    name: virt-install
     state: present
 
 - name: Install httpd
@@ -23,22 +27,36 @@
     state: present
   notify: start httpd
 
-- name: make /mnt/dvd
+- name: Modify firewalld for httpd
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+  ignore_errors: yes
+
+- name: make centos iso mount path
   file:
-    path: /mnt/dvd
+    path: " {{ centos_iso_mount_path }}"
     state: directory
   notify: mount CentOS ISO
 
 - name: Check for Centos ISO
-  shell: ls /mnt/ | grep -c CentOS-7-x86_64-Everything-1611.iso
+  shell: ls /mnt/ | grep -c {{ centos_iso_name }}
   register: CentOS_iso
   ignore_errors: yes
 
 - name: download CentOS ISO
   get_url:
-    url: http://chicago.gaminghost.co/7/isos/x86_64/CentOS-7-x86_64-Everything-1611.iso
+    url: "{{ uri_centos_iso }}"
     dest: /mnt
     validate_certs: no
     mode: 0644
   when: CentOS_iso.rc != 0
   notify: mount CentOS ISO
+
+- name: Create inst symlink
+  file:
+    path: "/var/www/html/inst"
+    src: "{{ centos_iso_mount_path }}"
+    force: yes
+    state: link

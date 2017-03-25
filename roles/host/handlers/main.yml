@@ -11,8 +11,8 @@
 
 - name: mount CentOS ISO
   mount:
-    name: /mnt/dvd
-    src: /mnt/CentOS-7-x86_64-Everything-1611.iso
+    name: "{{ centos_iso_mount_path }}"
+    src: "/mnt/{{ centos_iso_name }}"
     fstype: iso9660
     opts: ro,loop
     state: mounted
