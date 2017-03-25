@@ -1,0 +1,18 @@
+---
+
+- name: refresh sysctl
+  command: sysctl -p
+
+- name: start libvirtd
+  service: name=libvirtd state=restarted enabled=yes
+
+- name: start httpd
+  service: name=httpd state=restarted enabled=yes
+
+- name: mount CentOS ISO
+  mount:
+    name: /mnt/dvd
+    src: /mnt/CentOS-7-x86_64-Everything-1611.iso
+    fstype: iso9660
+    opts: ro,loop
+    state: mounted

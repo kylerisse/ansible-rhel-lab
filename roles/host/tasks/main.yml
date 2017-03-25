@@ -1,0 +1,44 @@
+---
+
+- name: Copy sysctl.conf
+  copy:
+    src: sysctl.conf
+    dest: /etc/sysctl.conf
+  notify: refresh sysctl
+
+- name: Install Virtualization Host group
+  yum:
+    name: "@Virtualization Host"
+    state: present
+  notify: start libvirtd
+
+- name: Install Virtualization Client group
+  yum:
+    name: "@Virtualization Client"
+    state: present
+
+- name: Install httpd
+  yum:
+    name: httpd
+    state: present
+  notify: start httpd
+
+- name: make /mnt/dvd
+  file:
+    path: /mnt/dvd
+    state: directory
+  notify: mount CentOS ISO
+
+- name: Check for Centos ISO
+  shell: ls /mnt/ | grep -c CentOS-7-x86_64-Everything-1611.iso
+  register: CentOS_iso
+  ignore_errors: yes
+
+- name: download CentOS ISO
+  get_url:
+    url: http://chicago.gaminghost.co/7/isos/x86_64/CentOS-7-x86_64-Everything-1611.iso
+    dest: /mnt
+    validate_certs: no
+    mode: 0644
+  when: CentOS_iso.rc != 0
+  notify: mount CentOS ISO
