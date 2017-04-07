@@ -1,0 +1,21 @@
+
+RESET ROOT:
+- e during grub
+- add rd.break
+- mount -o remount,rw /sysroot
+- chroot /sysroot
+- passwd root
+-- enter pw
+- touch /.autorelabel
+- exit
+- exit
+
+HTTPD:
+- yum install httpd
+- yum install httpd-manual
+- /usr/share/doc/http-2[tab] 
+- htpasswd (-c) <file> <user> 
+-- enter pw
+
+ALWAYS USE semanage boolean (man semanage-boolean) and not setsebool!!!!!!!!!
+chcon --reference= is pretty good

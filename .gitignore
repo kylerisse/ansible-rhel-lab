@@ -1,4 +1,4 @@
 .ansible
 .ansible-cache
-.vagrant
+*/.vagrant
 *.retry
