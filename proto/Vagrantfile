@@ -3,19 +3,48 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "centos/7"
+  config.vm.define 'server' do |s|
+    s.vm.box = "centos/7"
+    s.vm.network "private_network", ip: "192.168.122.2"
+    s.vm.network "private_network", ip: "192.168.200.22"
+    s.vm.hostname = "server"
+    s.vm.provision "shell", inline: <<-SHELL
+      ifup eth1
+      ifup eth2
+      chcon --reference /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth{1,2}
+      setenforce 1
+      systemctl enable firewalld.service
+      systemctl start firewalld.service
+      reboot
+    SHELL
+  end
 
-  config.vm.network "private_network", ip: "192.168.122.2"
-  config.vm.network "private_network", ip: "192.168.100.2"
+  config.vm.define 'untrusted' do |u|
+    u.vm.box = "centos/7"
+    u.vm.network "private_network", ip: "192.168.122.50"
+    u.vm.hostname = "untrusted"
+    u.vm.provision "shell", inline: <<-SHELL
+      ifup eth1
+      chcon --reference /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth1
+      setenforce 1
+      systemctl enable firewalld.service
+      systemctl start firewalld.service
+      reboot
+    SHELL
+  end
 
-  config.vm.provision "shell", inline: <<-SHELL
-    ifup eth1
-    ifup eth2
-    chcon --reference /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth{1,2}
-    setenforce 1
-    systemctl enable firewalld.service
-    systemctl start firewalld.service
-    reboot
-  SHELL
+  config.vm.define 'trusted' do |t|
+    t.vm.box = "centos/7"
+    t.vm.network "private_network", ip: "192.168.122.201"
+    t.vm.hostname = "trusted"
+    t.vm.provision "shell", inline: <<-SHELL
+      ifup eth1
+      chcon --reference /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth1
+      setenforce 1
+      systemctl enable firewalld.service
+      systemctl start firewalld.service
+      reboot
+    SHELL
+  end
 
 end
