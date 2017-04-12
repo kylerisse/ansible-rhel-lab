@@ -12,15 +12,25 @@ Vagrant.configure("2") do |config|
     s.vm.hostname = "server"
 
     diskname = "hd_server"
-    file_to_disk = File.join(VROOT, "#{diskname}.vdi")
+    file_to_disk1 = File.join(VROOT, "#{diskname}1.vdi")
+    file_to_disk2 = File.join(VROOT, "#{diskname}2.vdi")
+    file_to_disk3 = File.join(VROOT, "#{diskname}3.vdi")
 
     s.vm.provider "virtualbox" do |v|
       v.memory = 2048
       v.cpus = 2
-      unless File.exist?(file_to_disk)
-        v.customize ["createhd",  "--filename", diskname, "--size", "10048"]
+      unless File.exist?(file_to_disk1)
+        v.customize ["createhd",  "--filename", file_to_disk1, "--size", "100"]
       end
-      v.customize ["storageattach", :id, "--storagectl", "IDE", "--port", "0", "--device", "1", "--type", "hdd", "--medium", file_to_disk]
+      unless File.exist?(file_to_disk2)
+        v.customize ["createhd",  "--filename", file_to_disk2, "--size", "100"]
+      end
+      unless File.exist?(file_to_disk3)
+        v.customize ["createhd",  "--filename", file_to_disk3, "--size", "100"]
+      end
+      v.customize ["storageattach", :id, "--storagectl", "IDE", "--port", "0", "--device", "1", "--type", "hdd", "--medium", file_to_disk1]
+      v.customize ["storageattach", :id, "--storagectl", "IDE", "--port", "1", "--device", "0", "--type", "hdd", "--medium", file_to_disk2]
+      v.customize ["storageattach", :id, "--storagectl", "IDE", "--port", "1", "--device", "1", "--type", "hdd", "--medium", file_to_disk3]
     end
 
     s.vm.provision "shell", inline: <<-SHELL
