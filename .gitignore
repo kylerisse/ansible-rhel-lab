@@ -1,5 +1,5 @@
 .ansible
 .ansible-cache
-*/.vagrant
+.vagrant
 *.retry
-*/*.vdi
+*.vdi
