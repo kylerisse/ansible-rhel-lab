@@ -1,0 +1,6 @@
+192.168.122.2 server.example.com server
+192.168.122.50 untrusted.foo.io untrusted
+192.168.122.50 trusted.example.com trusted
+192.168.122.250 nfs.example.com nfs
+
+192.168.200.22 www.public-site.com

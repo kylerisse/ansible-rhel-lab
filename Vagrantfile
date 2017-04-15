@@ -68,4 +68,25 @@ Vagrant.configure("2") do |config|
     t.vm.provision "shell", :path => "bootstrap.sh"
   end
 
+  config.vm.define 'nfs' do |n|
+    n.vm.box = "centos/7"
+    n.vm.network "private_network", ip: "192.168.122.250"
+    n.vm.hostname = "nfs"
+    n.vm.provider "virtualbox" do |v|
+      v.memory = boxes[:mem]
+      v.cpus = boxes[:cpu]
+    end
+
+    n.vm.provision "shell", inline: <<-SHELL
+      ifup eth1
+    SHELL
+
+    n.vm.provision "ansible" do |ansible|
+      ansible.verbose = "vv"
+      ansible.playbook = "nfs.yml"
+      ansible.host_key_checking = false
+    end
+
+  end
+
 end

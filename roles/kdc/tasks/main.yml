@@ -1,0 +1,45 @@
+---
+
+- name: Disable selinux
+  selinux: state=disabled
+
+- name: install krb5-server
+  yum: name=krb5-server state=present
+
+- name: copy krb5.conf
+  copy:
+    src: krb5.conf
+    dest: /etc/krb5.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart krb5kdc
+
+- name: copy EXAMPLE.COM dumpfile
+  copy:
+    src: dumpfile
+    dest: /root/dumpfile
+    mode: 0600
+    owner: root
+    group: root
+
+- name: copy .k5.EXAMPLE.COM
+  copy:
+    src: k5.EXAMPLE.COM
+    dest: /var/kerberos/krb5kdc/.k5.EXAMPLE.COM
+    mode: 0600
+    owner: root
+    group: root
+
+- name: import dumpfile to db
+  shell: kdb5_util load -verbose -d principal /root/dumpfile
+  args:
+    chdir: /var/kerberos/krb5kdc
+    creates: /var/kerberos/krb5kdc/principal
+
+- name: install krb5-workstation
+  yum: name=krb5-workstation state=present
+  notify: restart kadmin
+
+- name: disabled firewalld
+  service: name=firewalld state=stopped enabled=no
