@@ -22,13 +22,10 @@ Using the playbook you should be able to take a single build of CentOS (or any o
 
 This repo also contains a vagrant environment for those that want to get up and running fast and don't need to play with libvirt.
 
-* Builds 3 CentOS7 VMs
-
-box | IP | hostname
---- | --- | --- | ---
-server | 192.168.122.2 / 192.168.200.22 | server.example.com   
-untrusted | 192.168.122.50 | untrusted.foo.io   
-trusted | 192.168.122.201 | trusted.example.com   
+Builds 3 CentOS boxes
+* server | 192.168.122.2 / 192.168.200.22 | server.example.com   
+* untrusted | 192.168.122.50 | untrusted.foo.io   
+* trusted | 192.168.122.201 | trusted.example.com   
 
 Server VM has additional features:
 * 3 additional HDs for playing with disk level tech such as LVM, (f|g)disk, encryption, etc.
