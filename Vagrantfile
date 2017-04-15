@@ -40,14 +40,10 @@ Vagrant.configure("2") do |config|
     end
 
     s.vm.provision "shell", inline: <<-SHELL
-      ifup eth1
+      chcon --reference /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth2
       ifup eth2
-      chcon --reference /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth{1,2}
-      setenforce 1
-      systemctl enable firewalld.service
-      systemctl start firewalld.service
-      reboot
     SHELL
+    s.vm.provision "shell", :path => "bootstrap.sh"
   end
 
   config.vm.define 'untrusted' do |u|
@@ -58,14 +54,7 @@ Vagrant.configure("2") do |config|
       v.memory = boxes[:mem]
       v.cpus = boxes[:cpu]
     end
-    u.vm.provision "shell", inline: <<-SHELL
-      ifup eth1
-      chcon --reference /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth1
-      setenforce 1
-      systemctl enable firewalld.service
-      systemctl start firewalld.service
-      reboot
-    SHELL
+    u.vm.provision "shell", :path => "bootstrap.sh"
   end
 
   config.vm.define 'trusted' do |t|
@@ -76,14 +65,7 @@ Vagrant.configure("2") do |config|
       v.memory = boxes[:mem]
       v.cpus = boxes[:cpu]
     end
-    t.vm.provision "shell", inline: <<-SHELL
-      ifup eth1
-      chcon --reference /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth1
-      setenforce 1
-      systemctl enable firewalld.service
-      systemctl start firewalld.service
-      reboot
-    SHELL
+    t.vm.provision "shell", :path => "bootstrap.sh"
   end
 
 end

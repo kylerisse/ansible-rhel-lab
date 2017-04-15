@@ -6,12 +6,11 @@ This repo contains an Ansible playbook as well as a Vagrantfile which will assis
 
 This playbook has the following features:
 
-* SElinux enabled
-* Libvirt functional
-* HTTPD installed
-* CentOS ISO downloaded and contents served via HTTPD, for network based installations
+* Libvirt
+* HTTPD
+* CentOS ISO downloaded and contents served via httpd, for network based installations
 
-Using the playbook you should be able to take a single build of CentOS (or any other EL in theory) and turn it into a lab similar to what Michael Jang defines in his book(s). It provides a smart starting point which can be used to quickly roll out KVM based VMs and practice.
+Using the playbook you should be able to take a single build of CentOS (or any other EL in theory) on a physical system and turn it into a lab similar to what Michael Jang and Alessandro Orsaria define in their book(s). It provides a starting point which can be used to quickly roll out KVM based VMs and practice.
 
 ### Playbook Usage
 
@@ -21,9 +20,15 @@ Using the playbook you should be able to take a single build of CentOS (or any o
 
 ## Vagrant
 
-This repo also contains a vagrant environment for those that want to get up and running fast and don't need to play with libvirt. The vagrant envrionment has the following features:
+This repo also contains a vagrant environment for those that want to get up and running fast and don't need to play with libvirt.
 
-* Builds 3 Centos7 VMs named server, untrusted, and trusted
+* Builds 3 CentOS7 VMs
+
+box | IP | hostname
+| --- | --- | --- | ---
+server | 192.168.122.2 / 192.168.200.22 | server.example.com   
+untrusted | 192.168.122.50 | untrusted.foo.io   
+trusted | 192.168.122.201 | trusted.example.com   
 
 Server VM has additional features:
 * 3 additional HDs for playing with disk level tech such as LVM, (f|g)disk, encryption, etc.
@@ -33,4 +38,6 @@ Server VM has additional features:
 
 * vagrant up
 
-All 3 VMs should be up and ready to go. vagrant status to verify.
+All 3 VMs should be up and ready to go. To verify:
+
+* vagrant status
