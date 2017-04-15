@@ -25,7 +25,7 @@ This repo also contains a vagrant environment for those that want to get up and 
 * Builds 3 CentOS7 VMs
 
 box | IP | hostname
-| --- | --- | --- | ---
+--- | --- | --- | ---
 server | 192.168.122.2 / 192.168.200.22 | server.example.com   
 untrusted | 192.168.122.50 | untrusted.foo.io   
 trusted | 192.168.122.201 | trusted.example.com   
